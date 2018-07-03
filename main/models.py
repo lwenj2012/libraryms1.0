@@ -41,8 +41,8 @@ class Reader(models.Model):
     reader_id = models.AutoField(primary_key=True)
     reader_name = models.CharField(max_length=30)
     reader_type = models.ForeignKey(ReaderType,on_delete=models.CASCADE)
-    reader_card = models.IntegerField()
-    reader_phone = models.IntegerField()
+    reader_card = models.CharField(max_length=30)
+    reader_phone = models.CharField(max_length=30)
     reader_email = models.CharField(max_length=30)
 
 # 管理员模型类
@@ -51,7 +51,7 @@ class Admin(models.Model):
     admin_name = models.CharField(max_length=30)
     admin_password = models.CharField(max_length=30)
     admin_jurisdiction = models.ForeignKey(Jurisdiction,on_delete=models.CASCADE)
-    admin_phone = models.IntegerField()
+    admin_phone = models.CharField(max_length=30)
 
 # 图书信息模型类
 class Book(models.Model):
@@ -71,7 +71,7 @@ class BookBorrow(models.Model):
     borrow_date = models.DateField(auto_now_add=True)
     private_date = models.DateField()
     if_return = models.BooleanField()
-    borrow_num = models.IntegerField(max_length=30)
+    borrow_num = models.IntegerField()
 
     class Meta:
         unique_together = (('reader_id','book_id'),)
