@@ -1,13 +1,57 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import math
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from models import *
 # Create your views here.
+
+
 def index_view(request):
     uname = request.session['admin_name']
-    return render(request, 'index.html', {'uname': uname})
+    booklist = BookBorrow.objects.all().order_by('-borrow_num')[:3]
+    return render(request, 'index.html', {'uname': uname, 'booklist': booklist})
+
+
+
+def index_view2(request):
+    uname = request.session['admin_name']
+    num = request.GET.get('num', 1)
+    num = int(num)
+
+    booklist = BookBorrow.objects.all().order_by('-borrow_num')
+    size = 2
+    paginator = Paginator(booklist, size)
+
+    try:
+        t_per_page = paginator.page(num)  # 获取当前页码的记录
+    except PageNotAnInteger:  # 如果用户输入的页码不是整数时,显示第1页的内容
+        t_per_page = paginator.page(1)
+    except EmptyPage:  # 如果用户输入的页数不在系统的页码列表中时,显示最后一页的内容
+        t_per_page = paginator.page(paginator.num_pages)
+
+    # 每页开始页码
+    begin = (num - int(math.ceil(10.0 / 2)))
+    if begin < 1:
+        begin = 1
+
+    # 每页结束页码
+    end = begin + 9
+    if end > paginator.num_pages:
+        end = paginator.num_pages
+
+    if end <= 10:
+        begin = 1
+    else:
+        begin = end - 9
+
+    pagelist = range(begin, end + 1)
+
+
+    return render(request, 'more.html', {'uname': uname, 'paginator': paginator, 't_per_page': t_per_page, 'pagelist': pagelist,'num':num,'size':size})
+
 
 
 def login_view(request):
