@@ -45,6 +45,19 @@ class Reader(models.Model):
     reader_phone = models.CharField(max_length=30)
     reader_email = models.CharField(max_length=30)
 
+
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        try:
+            self.reader_type = ReaderType.objects.get(reader_type=self.reader_type.reader_type)
+        except ReaderType.DoesNotExist:
+            self.reader_type = ReaderType.objects.create(reader_type=self.reader_type.reader_type,
+                                                         reader_borrow_num=self.reader_type.reader_borrow_num)
+
+        return models.Model.save(self, force_insert, force_update, using, update_fields)
+
+
 # 管理员模型类
 class Admin(models.Model):
     admin_id = models.AutoField(primary_key=True)

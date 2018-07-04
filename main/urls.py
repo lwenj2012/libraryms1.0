@@ -22,4 +22,10 @@ urlpatterns = [
     url(r'^bookBack/$',views.bookBack_view),
     url(r'^book/$',views.book_view),
     url(r'^more/$',views.index_view2),
+    url(r'^register/$',views.sign_view),
+    url(r'^bookcaseAdd/$',views.bookcaseAdd_view),
+    url(r'^readerTypeAdd/$',views.readerTypeAdd_view),
+    url(r'^reader_add/$',views.reader_add_view),
+    url(r'^book_add/$',views.book_add_view),
+    url(r'^bookTypeAdd/$',views.bookTypeAdd_view),
 ]

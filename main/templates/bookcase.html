@@ -16,7 +16,7 @@
   <tr>
     <td width="84%">&nbsp;      </td>
 <td width="16%" align="right">
-      <a href="#" >添加书架信息</a> </td>
+      <a href="/bookcaseAdd/" >添加书架信息</a> </td>
   </tr>
 </table>
   <table width="91%"  border="1" cellpadding="0" cellspacing="0" bordercolor="#FFFFFF" bordercolordark="#F6B83B" bordercolorlight="#FFFFFF">
@@ -26,17 +26,14 @@
     <td width="14%" bgcolor="#F9D16B">删除</td>
   </tr>
 
-  <tr>
-    <td style="padding:5px;">A架</td>
-    <td align="center"><a href="#" onClick="window.open('bookCase.do?action=bookCaseModifyQuery&ID=3','','width=292,height=175')">修改</a></td>
-    <td align="center"><a href="bookCase.do?action=bookCaseDel&ID=3">删除</a></td>
-  </tr>
+      {% for bc in bookcase_list %}
+            <tr>
+                <td style="padding:5px;">{{ bc.store_name }}</td>
+                <td align="center"><a href="#" onClick="window.open('bookCase.do?action=bookCaseModifyQuery&ID=3','','width=292,height=175')">修改</a></td>
+                <td align="center"><a href="#">删除</a></td>
+              </tr>
+      {% endfor %}
 
-  <tr>
-    <td style="padding:5px;">B架</td>
-    <td align="center"><a href="#" onClick="window.open('bookCase.do?action=bookCaseModifyQuery&ID=4','','width=292,height=175')">修改</a></td>
-    <td align="center"><a href="bookCase.do?action=bookCaseDel&ID=4">删除</a></td>
-  </tr>
 
 </table></td>
       </tr>
