@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from models import *
 # Create your views here.
@@ -64,10 +64,26 @@ def reader_view(request):
 
 def library_view(request):
     uname = request.session['admin_name']
+    #页面展示图书馆信息
     if request.method == 'GET':
         lib_list = LibraryInfo.objects.all()
-        return render(request, 'library_modify.html',{'lib_list':lib_list,'uname': uname})
+        #如果不为空，直接查询展示图书馆信息
+        if lib_list:
+            lib = lib_list[0]
+            return render(request, 'library_modify.html',{'lib':lib,'uname': uname})
+        #如果为空，渲染初始表单页面
+
+        return render(request, 'library_modify.html',{'uname': uname})
+
+    #增加或者修改图书馆信息
     if request.method == 'POST':
+        #如果为空，获取到一个空占位符
+        lib_id = request.POST.get('lib_id')
+        if len(lib_id)==0:
+            lib_id = 0
+
+        lib_id = int(lib_id)
+
         lib_name = request.POST.get('libraryname','')
         lib_manager = request.POST.get('curator','')
         lib_phone = request.POST.get('tel','')
@@ -76,12 +92,16 @@ def library_view(request):
         lib_url = request.POST.get('url','')
         lib_build = request.POST.get('createDate','')
         lib_info = request.POST.get('introduce','')
-        if not LibraryInfo.objects.all():
+        #查询是否已存在图书馆信息
+        libobj = LibraryInfo.objects.filter(lib_id=lib_id)
+        #如果为空，直接创建一个对象
+        if not libobj:
             LibraryInfo.objects.create(lib_name=lib_name,lib_manager=lib_manager,lib_phone=lib_phone,lib_location=lib_location,lib_email=lib_email,lib_url=lib_url,lib_build=lib_build,lib_info=lib_info)
+        #如果已存在，只进行更新信息
         else:
-            LibraryInfo.objects.filter(lib_id=1).update(lib_name=lib_name,lib_manager=lib_manager,lib_phone=lib_phone,lib_location=lib_location,lib_email=lib_email,lib_url=lib_url,lib_build=lib_build,lib_info=lib_info)
-        lib_list = LibraryInfo.objects.all()
-        return render(request,'library_modify.html',{'lib_list':lib_list,'uname': uname})
+            libobj.update(lib_name=lib_name,lib_manager=lib_manager,lib_phone=lib_phone,lib_location=lib_location,lib_email=lib_email,lib_url=lib_url,lib_build=lib_build,lib_info=lib_info)
+
+        return HttpResponseRedirect('/lm/libraryModify/')
 
 
 def readerType_view(request):
